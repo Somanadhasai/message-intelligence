@@ -1,0 +1,29 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test/cache
+.pytest_cache/
+
+# Candidate dataset - DO NOT PUBLISH
+data/messages.csv
+data/mandatory_demo_ids.csv
+
+# Generated outputs
+outputs/*.json
+
+# Environment/secrets
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

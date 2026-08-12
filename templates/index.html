@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Message Intelligence</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header>
+
+        <div>
+            <h1>Message Intelligence</h1>
+
+            <p>
+                Local message classification, task extraction
+                and sensitive-information detection
+            </p>
+        </div>
+
+        <div class="status">
+            ● System Ready
+        </div>
+
+    </header>
+
+
+    <!-- Statistics -->
+
+    <section class="stats">
+
+        <div class="card">
+            <h3>Total Messages</h3>
+            <div class="number">
+                {{ total_messages }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Action Required</h3>
+            <div class="number">
+                {{ category_counts.get("action_required", 0) }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Meetings / Events</h3>
+            <div class="number">
+                {{ category_counts.get("meeting_or_event", 0) }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Personal Information</h3>
+            <div class="number">
+                {{ category_counts.get("personal_information", 0) }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>General Information</h3>
+            <div class="number">
+                {{ category_counts.get("general_information", 0) }}
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Promotional</h3>
+            <div class="number">
+                {{ category_counts.get("promotional", 0) }}
+            </div>
+        </div>
+
+        <div class="card sensitive-card">
+            <h3>Sensitive</h3>
+            <div class="number">
+                {{ sensitive_count }}
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Extraction summary -->
+
+    <section class="section">
+
+        <h2>Task & Event Extraction</h2>
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+                <span>Tasks Extracted</span>
+                <strong>{{ task_count }}</strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Meetings / Events</span>
+                <strong>{{ event_count }}</strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Mandatory Demo IDs</span>
+                <strong>{{ mandatory_count }}</strong>
+            </div>
+
+            <div class="summary-box warning">
+                <span>Low Confidence</span>
+                <strong>{{ low_confidence_count }}</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Mandatory IDs -->
+
+    <section class="section">
+
+        <h2>Mandatory Demonstration Messages</h2>
+
+        <p class="section-description">
+            Required message IDs supplied with the assignment.
+            Sensitive values are never displayed in raw form.
+        </p>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Message ID</th>
+                        <th>Category</th>
+                        <th>Confidence</th>
+                        <th>Reason</th>
+                        <th>Sensitive</th>
+                        <th>Risk</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in mandatory_results %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ item.message_id }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="badge">
+                                {{ item.category }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ item.confidence }}
+                        </td>
+
+                        <td>
+                            {{ item.reason }}
+                        </td>
+
+                        <td>
+
+                            {% if item.sensitive %}
+
+                                <span class="danger">
+                                    YES
+                                </span>
+
+                            {% else %}
+
+                                <span class="safe">
+                                    NO
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ item.risk or "—" }}
+                        </td>
+
+                        <td>
+                            {{ item.recommended_action or "—" }}
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- Methodology -->
+
+    <section class="section">
+
+        <h2>Processing Pipeline</h2>
+
+        <div class="pipeline">
+
+            <div>
+                <strong>1</strong>
+                <span>Read CSV</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div>
+                <strong>2</strong>
+                <span>Detect Sensitive Data</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div>
+                <strong>3</strong>
+                <span>Classify Message</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div>
+                <strong>4</strong>
+                <span>Extract Tasks / Events</span>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div>
+                <strong>5</strong>
+                <span>Generate JSON</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            Message Intelligence • Local processing •
+            No raw messages sent to external AI services
+        </p>
+
+    </footer>
+
+</div>
+
+</body>
+
+</html>
