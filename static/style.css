@@ -210,3 +210,12 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+.demo-notice {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}

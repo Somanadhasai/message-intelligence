@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 
 # ===============================================================
@@ -14,6 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 OUTPUT_DIR = BASE_DIR / "outputs"
 TEMPLATE_DIR = BASE_DIR / "templates"
+STATIC_DIR = BASE_DIR / "static"
 
 
 # ===============================================================
@@ -25,6 +27,18 @@ app = FastAPI(
     description="Local message classification and task/event extraction system",
     version="1.0.0",
 )
+
+
+# ===============================================================
+# STATIC FILES
+# ===============================================================
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(STATIC_DIR)),
+    name="static",
+)
+
 
 templates = Jinja2Templates(
     directory=str(TEMPLATE_DIR)
@@ -50,6 +64,7 @@ def load_json(filename):
     try:
         with open(filepath, "r", encoding="utf-8") as file:
             return json.load(file)
+
     except (json.JSONDecodeError, OSError):
         return []
 
@@ -252,10 +267,8 @@ def dashboard(request: Request):
     cloud_demo_mode = not bool(classifications)
 
     # -----------------------------------------------------------
-    # Use real output data when available
-    # Otherwise use safe demonstration statistics.
-    #
-    # No raw messages or sensitive values are included.
+    # Use real local output data when available.
+    # Otherwise use safe synthetic demonstration data.
     # -----------------------------------------------------------
 
     if cloud_demo_mode:
@@ -267,8 +280,11 @@ def dashboard(request: Request):
         )
 
         task_count = 150
+
         event_count = 190
+
         sensitive_count = 90
+
         mandatory_count = 15
 
         low_confidence_count = 326
@@ -311,7 +327,7 @@ def dashboard(request: Request):
         )
 
         # -------------------------------------------------------
-        # Low confidence messages
+        # Low-confidence messages
         # -------------------------------------------------------
 
         low_confidence = [
@@ -323,6 +339,10 @@ def dashboard(request: Request):
         low_confidence_count = len(
             low_confidence
         )
+
+        # -------------------------------------------------------
+        # Real output counts
+        # -------------------------------------------------------
 
         total_messages = len(
             classifications

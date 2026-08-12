@@ -40,6 +40,14 @@
 
     </header>
 
+    {% if cloud_demo_mode %}
+    <div class="demo-notice">
+        Cloud Demo Mode: This deployment uses synthetic demonstration
+        data. The supplied candidate dataset is kept private and is
+        not included in the public repository.
+    </div>
+    {% endif %}
+
 
     <!-- Statistics -->
 
@@ -101,7 +109,7 @@
 
     <section class="section">
 
-        <h2>Task & Event Extraction</h2>
+        <h2>Task &amp; Event Extraction</h2>
 
         <div class="summary-grid">
 
